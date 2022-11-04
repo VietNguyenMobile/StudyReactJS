@@ -51,7 +51,57 @@ const getAllUser = async () => {
   });
 };
 
+const getUserById = async (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const users = await db.User.findOne({
+        where: { id: userId },
+        raw: true,
+      });
+      // console.log("getUserById users: ", users);
+      if (users) {
+        resolve(users);
+      } else {
+        resolve([]);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const updateUserData = async (userData) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log("updateUserData userData: ", userData);
+      let user = await db.User.findOne({
+        where: { id: userData.id },
+      });
+      console.log("updateUserData user: ", user);
+      if (user) {
+        user.firstName = userData.firstName;
+        user.lastName = userData.lastName;
+        user.address = userData.address;
+        console.log("user updated: ", user);
+        await user.save();
+
+        let allUsers = await db.User.findAll({
+          raw: true,
+        });
+        console.log("allUsers: ", allUsers);
+        resolve(allUsers);
+      } else {
+        resolve();
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   createNewUser,
   getAllUser,
+  getUserById,
+  updateUserData,
 };
