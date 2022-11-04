@@ -1,5 +1,5 @@
 const db = require("../models/index");
-import { createNewUser } from "../services/CRUDServices";
+import { createNewUser, getAllUser } from "../services/CRUDServices";
 
 const getHomePage = async (req, res) => {
   try {
@@ -29,8 +29,22 @@ const postCRUD = async (req, res) => {
   } catch (e) {}
 };
 
+const displayGetCRUD = async (req, res) => {
+  try {
+    // const message = await createNewUser(req.body);
+    // console.log("message: ", message);
+    const users = await getAllUser();
+    console.log("users: ", users);
+    // return res.send("get crud from server side");
+    return res.render("displayCRUD.ejs", {
+      dataTable: users,
+    });
+  } catch (e) {}
+};
+
 module.exports = {
   getHomePage,
   getCRUD,
   postCRUD,
+  displayGetCRUD,
 };
